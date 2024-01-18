@@ -1,0 +1,613 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang=ru>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redmine - Добро пожаловать в проект</title>
+    <meta name="description" content=Redmine />
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="lioHoPMjKNTUt555/sp6lVZgVYk7hJYj5I79WOEsSc2bwWmR2jyp3g8gI5G25/ywnU1Zx8sVBnP8Jzhqcvo1bA==" />
+    <link rel='shortcut icon' href='/favicon.ico?1585303490' />
+    <link rel="stylesheet" media="all" href="/stylesheets/jquery/jquery-ui-1.11.0.css?1585303489" />
+<link rel="stylesheet" media="all" href="/themes/redmine_alex_skin/stylesheets/application.css?1646226737" />
+    <script src="/javascripts/jquery-1.11.1-ui-1.11.0-ujs-3.1.4.js?1585303489"></script>
+<script src="/javascripts/application.js?1585303489"></script>
+<script>
+//<![CDATA[
+$(window).load(function(){ warnLeavingUnsaved('Текущая страница содержит несохранённый текст, который будет потерян, если вы покинете эту страницу.'); });
+//]]>
+</script>
+<script>
+//<![CDATA[
+$(document).ready(function() { var orig_setupAjaxIndicator = setupAjaxIndicator; function setupAjaxIndicator(){}; $('#ajax-indicator').remove(); });
+//]]>
+</script>
+     <style type="text/css">/* скролл для блоков в разделе Моя страница */
+#block-issuesreportedbyme div.autoscroll,
+#block-issueswatched div.autoscroll,
+[id*="block-issuequery__"] div.autoscroll,
+#block-issuequery div.autoscroll,
+#block-issuesassignedtome div.autoscroll
+{
+	max-height: 524px;
+	overflow-y: scroll !important;
+}
+
+/* отсутствие поля для текста в примечании для новой задачи */
+#in_issue_form.new_issue #comment_for_lu_issue{
+	display: none;
+}
+
+/* цвет подчеркивания статусов */
+.status span {
+    border-bottom-color: #0000;
+}
+
+/* рамка для статуса "В работе!" */
+.status-57 > td.status > span, span.lb-status-color.lb-status-57, .status-57 div.status div.lb-field-data span {
+    border: thick double #c13131;
+}
+
+/* отображение кнопки удаления комментария в задаче 
+.icon-only.icon-del {
+    display: none;
+}*/
+
+/* отображение карточки создания задачи */
+#use_alternate_issue_page.lb_tracker-48 {
+  display: none;
+}
+
+/* цвет приоритета Низкий */
+tr.priority-lowest {
+  background-color: #c9e9ff;
+}
+
+/* размер окна googledoc */
+iframe {
+height: 900px;
+}
+
+/* предупреждение в кнопке об отсутствии действий */
+.nodata.mrg_7_0 {
+  display: none;
+}
+
+/* надпись Инструкции в кнопке
+legend {
+  display: none;
+}
+*/
+
+.lb-block-data > ul.checklist-index {
+  display: none;
+}</style> <script type="text/javascript">
+//<![CDATA[
+//Write your JS code here
+
+$( document ).ready(function() {
+  
+    $.urlParam = function(name){
+		var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+		if (results == null) {
+			return 0;
+		}
+		return results[1] || 0;
+	}
+    
+    let $urlOffer = $.urlParam('test');
+  
+  	// Возможность скрывать списки (инфа кешируется в localStorage)
+    //if ($urlOffer && $urlOffer > 0) {
+      if ($('table.list.issues').length)
+      {
+          
+		  let LOCAL_MAS = [];
+          // Читаем localstorage
+          let localStr = localStorage.getItem('collapsedList');
+          if (localStr) LOCAL_MAS = JSON.parse(localStr);
+		  
+		  function parsing(src){
+			  const searchStr = '/users/';
+			  const indexOf = src.search(searchStr);
+              const indexOfFull = src.search(searchStr) + searchStr.length;
+			  if (indexOf != -1) {
+                  return src.slice(indexOfFull);
+              }
+				else 
+			  return '';
+		  }
+          // Проходим по массиву элементов и скрываем лишнее
+          $('table.list.issues span.name > a.user').each(function(index, element){
+              const src = element.href;
+			  const parse = parsing(src);
+			  if (parse){
+				if (LOCAL_MAS.indexOf( parseInt(parse)) != -1){
+					toggleRowGroup(element);
+				}
+			  }
+          });
+		  
+		  // Добавление в массив
+		  function masAdd(elem){
+			const count = 25;
+			let source = LOCAL_MAS;
+			source.unshift(elem);
+			// Убираем дубли
+			let temp = source.filter((item, index) => {
+				return source.indexOf(item) === index
+			});
+			// Ограничиваем массив
+			source = temp.slice(0, count);
+            LOCAL_MAS = source;
+            // console.log('LOCAL_MAS:', LOCAL_MAS);
+            // local
+            localStorage.setItem('collapsedList', JSON.stringify(LOCAL_MAS) );
+		  }
+		  
+		  function masDelete(elem){
+			if (LOCAL_MAS.indexOf(elem) != -1){
+				LOCAL_MAS = LOCAL_MAS.filter((n) => {return n != elem});
+				// console.log('LOCAL_MAS:',LOCAL_MAS);
+               	// local
+            	localStorage.setItem('collapsedList', JSON.stringify(LOCAL_MAS) );
+			}
+		  }
+		  
+		  $('table.list.issues span.expander').click(function(e){
+			elem_link = $(this).next().children('a').attr('href');
+			elem_tr = $(this).parents('tr').first();
+			(elem_tr.hasClass('open')) 
+				? masDelete(parseInt(parsing(elem_link)))
+				: masAdd(parseInt(parsing(elem_link)));
+		  });
+      }
+    //}
+});
+
+
+
+//]]>
+</script> <script src="/plugin_assets/redmine_cut_tag/javascripts/redmine_cut_tag.js?1585303489"></script>
+<link rel="stylesheet" media="screen" href="/plugin_assets/redmine_cut_tag/stylesheets/redmine_cut_tag.css?1585303489" />
+ 
+<link rel="stylesheet" media="screen" href="/plugin_assets/redmine_dmsf/stylesheets/redmine_dmsf.css?1687498474" />
+<link rel="stylesheet" media="screen" href="/plugin_assets/redmine_dmsf/stylesheets/select2.min.css?1687498474" />
+<script src="/plugin_assets/redmine_dmsf/javascripts/select2.min.js?1687498474"></script>
+<script src="/plugin_assets/redmine_dmsf/javascripts/redmine_dmsf.js?1687498474"></script> <link rel="stylesheet" media="screen" href="/plugin_assets/redmine_email_fetcher/stylesheets/email_configurations.css?1585303489" /> <script src="/plugin_assets/redmine_mermaid/javascripts/mermaid.min.js?1701952934"></script><link rel="stylesheet" media="screen" href="/plugin_assets/redmine_mermaid/stylesheets/mermaid.css?1701952934" /> <!--If the actual page is a wiki page-->
+ 
+ <script src="/javascripts/redmine_extensions/blocking_namespace.js?1705551856"></script><script src="/javascripts/redmine_extensions/blocking_schedule.js?1705551856"></script><script src="/javascripts/redmine_extensions/blocking_polyfill.js?1705551856"></script><script src="/javascripts/redmine_extensions/blocking_render.js?1705551856"></script><script src="/javascripts/redmine_extensions/blocking_utils.js?1705551856"></script><script src="/javascripts/redmine_extensions/easy_togglers.js?1705551856"></script><script src="/javascripts/redmine_extensions/jquery.entityarray.js?1705551856"></script><script src="/javascripts/redmine_extensions/render_polyfill.js?1705551856"></script><script src="/javascripts/redmine_extensions/dynamic_loading.js?1705551856"></script><script src="/javascripts/redmine_extensions/redmine_extensions.js?1705551856"></script> <link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/hint.css?1585303489" />
+<link rel="stylesheet" media="all" href="/plugin_assets/a_common_libs/stylesheets/a_common_styles.css?1618483929" />
+<link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/rmp_settings.css?1618483929" />
+<script src="/plugin_assets/a_common_libs/javascripts/a_common_libs.js?1618483929"></script>
+<script src="/plugin_assets/a_common_libs/javascripts/utils.js?1618483929"></script>
+<script src="/plugin_assets/a_common_libs/javascripts/jquery.sortable_extend.js?1585303489"></script>
+<script src="/plugin_assets/a_common_libs/javascripts/jquery.serialize-hash.js?1585303489"></script>
+
+  <link rel="stylesheet" media="all" href="/plugin_assets/a_common_libs/stylesheets/font-awesome.css?1585303489" />
+
+  <link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/bootstrap.min.css?1585303489" />
+  <script src="/plugin_assets/a_common_libs/javascripts/bootstrap.min.js?1585303489"></script>
+  <script src="/plugin_assets/a_common_libs/javascripts/bootstrap.modal.ext.js?1585303489"></script>
+
+
+
+
+  <script src="/plugin_assets/a_common_libs/javascripts/select2/select2.js?1585303489"></script>
+  <link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/select2.css?1634887393" />
+    <script src="/plugin_assets/a_common_libs/javascripts/select2/i18n/ru.js?1585303489"></script>
+  <script src="/plugin_assets/a_common_libs/javascripts/select2/select2_extentions.js?1585303489"></script>
+
+
+  <script src="/plugin_assets/a_common_libs/javascripts/patches.js?1585303489"></script>
+
+  <script src="/plugin_assets/a_common_libs/javascripts/modal_windows.js?1585303489"></script>
+  <link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/modal_windows.css?1585303489" />
+
+
+<script type="text/javascript">
+  RMPlus.Utils = (function (my) {
+    var my = my || {};
+
+    my.user_locale = 'ru';
+    my.combobox_placeholder = 'Введите данные';
+    my.combobox_404 = 'Ошибка 404, URL не найден';
+    my.combobox_error = 'Ошибка сервера, попробуйте позже';
+    my.relative_url_root = '';
+    my.redmine_version = '3.4.7.stable';
+    my.mobile = false
+
+    my.locale = { clearButton: 'Очистить',
+                  closeButton: 'Закрыть',
+                  monthNames: ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],
+                  quarterNames: ["I кв.","II кв.","III кв.","IV кв."]
+                };
+
+    return my;
+  })(RMPlus.Utils || {});
+  RMPlus.ACL.enable_ajax_edit_form = "true";
+</script>
+
+
+  <script>
+    $(document).ready(function(){
+      $('#footer').find('.bgl .bgr ').html('<a href="http://rmplus.pro/sistema_upravlenija_organizaciej">«RM+»</a> — cделана с умом, заботой о людях и любовью к профессии.');
+    });
+  </script>
+
+
+
+  <script src="/plugin_assets/a_common_libs/javascripts/ajax_counters.js?1585303489"></script>
+
+
+  <script type="text/javascript">
+    RMPlus.ACL.initialize({});
+  </script>
+ 
+<script src="/plugin_assets/custom_menu/javascripts/custom_menu.js?1585303489"></script>
+<link rel="stylesheet" media="screen" href="/plugin_assets/custom_menu/stylesheets/custom_menu.css?1585303489" />
+
+<script src="/plugin_assets/custom_menu/javascripts/bootstrap.dropdown.js?1585303489"></script>
+<link rel="stylesheet" media="screen" href="/plugin_assets/custom_menu/stylesheets/bootstrap.dropdown.css?1585303489" />
+
+
+<link rel="stylesheet" media="screen" href="/plugin_assets/custom_menu/stylesheets/_responsive.css?1585303489" />
+
+  <link rel="stylesheet" media="screen" href="/plugin_assets/custom_menu/stylesheets/cm_responsive.css?1585303489" />
+  <script src="/plugin_assets/custom_menu/javascripts/cm_responsive.js?1585303489"></script>
+
+<script type="text/javascript">
+
+  RMPlus.CustomMenu = (function(my){
+    var my = my || {};
+
+    my.settings = {"use_custom_menu":"true","use_cache":"true","dropdown_menu_links":"true","hide_bottom_issue_links":"true"};
+
+    my.label_export_to_format = 'Экспортировать в:';
+
+    my.links_menu_tag = '<div class="dropdown nav pull-right" id="cm_contextual_menu" style="display: none;"><a href="#" class="dropdown-toggle in_link icon icon-dd-menu" data-toggle="dropdown"><span>Другое</span></a><ul id="dd-ul" class="dropdown-menu" role="menu" aria-labelledby="dLabel"></ul></div>';
+
+    return my;
+  })(RMPlus.CustomMenu || {});
+
+</script> 
+ 
+ 
+<link rel="stylesheet" media="screen" href="/plugin_assets/luxury_buttons/stylesheets/luxury_buttons_common.css?1632829873" />
+<script src="/plugin_assets/luxury_buttons/javascripts/luxury_buttons_common.js?1618479909"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+  var relative_url_root = '';
+  var lu_delete_button_label = 'Удалить';
+
+  RMPlus.LB = (function(my){
+    var my = my || {};
+
+    my.leaving_warning = 'Текущая страница содержит несохранённый текст, который будет потерян, если вы покинете эту страницу.';
+    my.option_saved_label = 'Cохранено';
+    my.fast_fields = {};
+    my.templates_comments = [];
+
+    return my;
+  })(RMPlus.LB || {});
+</script>
+
+  <style type="text/css">
+    td.status span,
+    div.status div.lb-field-data span,
+    span.lb-status-color {
+      border-bottom-style: solid;
+      border-bottom-width: 2px;
+      padding-bottom: 0;
+    }
+
+        .status-57 > td.status > span,
+        span.lb-status-color.lb-status-57,
+        .status-57 div.status div.lb-field-data span {
+          border-bottom-color: #333;
+        }
+  </style>
+
+  <script type="text/javascript">
+    $(document).on('ready', document.body, function(event) {
+      $('td.status').each(function (index) {
+        if ($(this).html() == $(this).text()) {
+          $(this).html('<span>'+$(this).html()+'</span>');
+        }
+      });
+    });
+  </script>
+
+<script type="text/javascript" charset="utf-8">
+  RMPlus.LB.lu_date_pairs = JSON.parse('[["0",{"name":""}]]');
+</script>
+
+
+
+ <script src="/plugin_assets/redmine_sender/javascripts/redmine_sender.js?1618479909"></script>
+<link rel="stylesheet" media="screen" href="/plugin_assets/redmine_sender/stylesheets/redmine_sender.css?1632384854" />
+  <script>
+    RMPlus.RS.desktop_present = false;
+  </script>
+
+ <script type="text/javascript">
+  RMPlus.RUM = (function (my) {
+    var my = my || {};
+    my.fields_with_mentions = '#issue_description, .wiki-edit';
+    my.mentions_magic_char = '@';
+    my.min_chars_for_mentions = 3;
+    my.myself_link = 'I';
+    return my;
+  })(RMPlus.RUM || {});
+</script>
+
+<script src="/plugin_assets/rm_user_mentions/javascripts/mention/mention.js?1585303489"></script>
+<script src="/plugin_assets/rm_user_mentions/javascripts/rum.js?1585303489"></script>
+<link rel="stylesheet" media="screen" href="/plugin_assets/rm_user_mentions/stylesheets/rum.css?1585303489" />
+ <link rel="stylesheet" media="screen" href="/plugin_assets/unread_issues/stylesheets/unread_issues.css?1585303489" />
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<script type="text/javascript">
+
+  RMPlus.Usability = (function(my){
+    var my = my || {};
+      my.msg_autosaved = 'Сохранено в черновик';
+      my.collapse_label = 'Свернуть изменения';
+      my.expand_label = 'Показать изменения';
+    my.settings = {"usability_progress_bar_type":"tor","disable_ajax_preloader":"true","enable_underlined_links":"true","remove_project_page_header_breadcrumb":"true","enable_download_attachments_all_in_one":"true","replace_login_page":"true","enable_full_activities_for_issues":"true","use_copy_from_clipboard":"true","join_attachments_to_group":"true","use_custom_project_members_form":"true","use_static_date_in_history":"true","collapse_changes_for_history":"true","replace_link_textilizable":"true","hide_next_prev_issues":"true","enable_ajax_project_settings":"true","use_autosave_fields":"true","autosave_fields":".us-autosave","autosave_fields_limitation":"20","show_sidebar_close_button":"true","usability_sidebar_width":"310","usability_sidebar_gap":"40","default_page":"https://wf.kvant-telecom.ru/projects/kvant-telecom","enable_custom_default_page":"true","fast_link_top_page":{"url":"","text":"","icon":"fa-user-o","color":"#bb251e"}};
+
+    my.galleryPopupSettings = {
+      type: 'image',
+      gallery: {
+        enabled: true,
+        navigateByImgClick: true,
+
+        midClick: false,
+
+        arrowMarkup: '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"></button>',
+        tPrev: 'Назад',
+        tNext: 'Вперед',
+        tCounter: '<span class="mfp-counter">%curr% из %total%</span>'
+      },
+      image: {
+        tError: '<a href="%url%">Изображение</a> не может быть загружено.'
+      },
+      ajax: {
+       tError: 'Ошибка <a href="%url%">запроса</a> к серверу.'
+      },
+      tClose: 'Закрыть (Esc)',
+      tLoading: 'Загрузка...'
+    };
+
+    return my;
+  })(RMPlus.Usability || {});
+
+
+
+</script>
+
+<script src="/javascripts/raphael.js?1585303489"></script>
+<script src="/plugin_assets/usability/javascripts/pie-chart.js?1585303489"></script>
+<script src="/plugin_assets/usability/javascripts/usability.js?1585303489"></script>
+<link rel="stylesheet" media="screen" href="/plugin_assets/usability/stylesheets/usability.css?1585303489" />
+<script src="/plugin_assets/usability/javascripts/usability_clipboard.js?1585303489"></script>
+
+
+  <script src="/plugin_assets/usability/javascripts/fields_autosave.js?1585303489"></script>
+
+
+
+  <style type="text/css">
+    #content {
+      margin-right: 350px;
+      width: auto;
+    }
+    #sidebar {
+      width: 310px;
+    }
+  </style>
+
+
+
+    <link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/rmplus.css?1585303489" />
+      <style>
+    .rmp-background {
+      max-width: 320px;
+    }
+    .rmp-wrapper {
+      padding: 1px;
+      min-width: 320px;
+      box-sizing: border-box;
+    }
+    div.rmp-divider {
+      margin: 10px -1px;
+    }
+    .us-logo {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .us-register a {
+      font-size: 11px;
+    }
+
+    .us-style-body {
+      margin: 20px 0;
+      padding: 0 20px;
+      border: none;
+    }
+    .us-style-bottom {
+      background: #f7f7f7;
+      padding: 20px;
+      margin: -10px -1px -1px -1px;
+    }
+    .us-style-body div {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .us-style-body input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .us-style-body input.us-input {
+      border-radius: 4px;
+      font-size: 14px;
+      padding: 8px 8px 8px 35px;
+      border: 1px solid #ccc;
+      box-shadow: inset 1px 1px 1px rgba(204, 204, 204, 0.5);
+    }
+
+    .us-style-body input.us-input:focus {
+      outline: none;
+      border: 1px solid #77baed;
+      box-shadow: 0 0 5px #77baed, inset 1px 1px 1px rgba(204, 204, 204, 0.5);
+    }
+
+    .us-style-body input.us-input + span.fa {
+      color: #000;
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+    }
+
+    .us-style-body input.us-input[value=''] + span.fa {
+      color: #ccc;
+    }
+
+    .us-style-body input::-webkit-input-placeholder {
+      text-overflow: ellipsis;
+      color: #b3b3b3;
+      font-style: italic;
+    }
+    .us-style-body input::-moz-placeholder {
+      text-overflow: ellipsis;
+      color: #b3b3b3;
+      font-style: italic;
+    }
+    .us-style-body input:-moz-placeholder {
+      text-overflow: ellipsis;
+      color: #b3b3b3;
+      font-style: italic;
+    }
+    .us-style-body input:-ms-input-placeholder {
+      text-overflow: ellipsis;
+      color: #b3b3b3;
+      font-style: italic;
+    }
+
+    .us-style-body .flash {
+      padding: 8px 35px 8px 34px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+      border-radius: 4px;
+      background-image: none;
+      color: #B94A48;
+      background-color: #F2DEDE;
+      border: 1px solid #EED3D7;
+    }
+
+    .us-log-in-btn {
+      border: none;
+      outline: none !important;
+      color: #fff;
+      padding: 8px;
+      cursor: pointer;
+
+      -webkit-transition: border .25s linear, color .25s linear, background-color .25s linear;
+      transition: border .25s linear, color .25s linear, background-color .25s linear;
+
+      background: #d20067;
+      background-image: -webkit-linear-gradient(bottom, #ae0055, #d20067);
+      background-image: -moz-linear-gradient(bottom, #ae0055, #d20067);
+      background-image: -o-linear-gradient(bottom, #ae0055, #d20067);
+      background-image: linear-gradient(to top, #ae0055, #d20067);
+      border-radius: 5px;
+
+      box-shadow: 0 4px 0 #78003b;
+    }
+    .us-log-in-btn:hover {
+      position: relative;
+      top: 2px;
+      box-shadow: 0 2px 0 #78003b;
+      background: #d30067;
+    }
+  </style>
+  <script src="/plugin_assets/redmine_crm/javascripts/select2.js?1618485820"></script><link rel="stylesheet" media="screen" href="/plugin_assets/redmine_crm/stylesheets/select2.css?1686538228" /><script src="/plugin_assets/redmine_crm/javascripts/select2_helpers.js?1618485820"></script>
+  <link rel="stylesheet" media="screen" href="/plugin_assets/redmine_contacts/stylesheets/contacts.css?1585303489" />
+
+  </head>
+  <body>
+    <div class="rmp-centered-window">
+      <div class="rmp-background">
+          <div class="rmp-header">
+              <h1>
+    <p>Добро пожаловать в проект</p>
+    
+  </h1>
+
+          </div>
+          
+  <div class="us-logo">
+    <a class="no_line" href="http://rmplus.pro/"><img alt="Данный плагин разработан командой «RM+». Вы всегда можете найти другие наши плагины на сайте" title="Данный плагин разработан командой «RM+». Вы всегда можете найти другие наши плагины на сайте" width="75" style="vertical-align: bottom;" src="/plugin_assets/usability/images/logo.png?1585303489" /></a>
+  </div>
+
+        <div class="rmp-rmp-place"></div>
+        <div class="rmp-line-grad"></div>
+        <div class="rmp-wrapper">
+          
+
+
+<form action="/login" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="y2X9TjAslu0EjFmbh9crTv0ljndjYtbDzo4yygbTv1vGjpN/GTMX598b5HPP+q1rNgiCOZPzRpPWJ/f4lQXD+g==" />
+  <input type="hidden" name="back_url" value="https://wf.kvant-telecom.ru/attachments/download/45808/screenshot_1_1694593052.png" />
+
+  <div class="us-style-body">
+    
+    <div>
+      <input type="text" name="username" id="username" tabindex="2" placeholder="Ваш логин" class="us-input" />
+      <span class="fa fa-user"></span>
+    </div>
+    <div>
+      <input type="password" name="password" id="password" value="" tabindex="2" placeholder="Пароль" class="us-input" />
+      <span class="fa fa-unlock"></span>
+    </div>
+
+    <input type="submit" name="login" value="Войти в систему" tabindex="5" class="us-log-in-btn">
+  </div>
+
+  <div class="rmp-divider"></div>
+
+  <div class="us-style-bottom">
+    <div class="C"></div>
+  </div>
+</form>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#login-form ').remove();
+
+    $('#username, #password').on('change keyup input autocomplete textInput', function() {
+      this.setAttribute('value', this.value ? ('' || '1') : '');
+    }).trigger('keyup');
+
+      $('#username').focus();
+  });
+</script>
+        </div>
+        <div class="rmp-back top-left"></div>
+        <div class="rmp-back top-right"></div>
+        <div class="rmp-back bottom-left"></div>
+        <div class="rmp-back bottom-right"></div>
+
+        <div class="rmp-footer">
+          <p>
+            <a href="http://rmplus.pro/sistema_upravlenija_organizaciej">«RM+»</a> — сделана с умом, заботой о людях и любовью к профессии.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
