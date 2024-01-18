@@ -5,7 +5,7 @@
     <title>Redmine - Добро пожаловать в проект</title>
     <meta name="description" content=Redmine />
     <meta name="csrf-param" content="authenticity_token" />
-<meta name="csrf-token" content="KAfnBTDGqQfqjccn839dfkcyxdNgsxMR6sfpZkA4iQOgcmeBuOlLqZci6i2moHMUM63hZloHRXsQ30taoR73oQ==" />
+<meta name="csrf-token" content="GqI10rZYT7Qpb+xoeNtmhD8mf7ySRURKFLttLIAJfRgjOnwGDJ7dEec/hN9Vq9Fr80V4SdJDw21P2beiYyCHSA==" />
     <link rel='shortcut icon' href='/favicon.ico?1585303490' />
     <link rel="stylesheet" media="all" href="/stylesheets/jquery/jquery-ui-1.11.0.css?1585303489" />
 <link rel="stylesheet" media="all" href="/themes/redmine_alex_skin/stylesheets/application.css?1646226737" />
@@ -175,7 +175,7 @@ $( document ).ready(function() {
 <script src="/plugin_assets/redmine_dmsf/javascripts/select2.min.js?1687498474"></script>
 <script src="/plugin_assets/redmine_dmsf/javascripts/redmine_dmsf.js?1687498474"></script> <link rel="stylesheet" media="screen" href="/plugin_assets/redmine_email_fetcher/stylesheets/email_configurations.css?1585303489" /> <script src="/plugin_assets/redmine_mermaid/javascripts/mermaid.min.js?1701952934"></script><link rel="stylesheet" media="screen" href="/plugin_assets/redmine_mermaid/stylesheets/mermaid.css?1701952934" /> <!--If the actual page is a wiki page-->
  
- <script src="/javascripts/redmine_extensions/blocking_namespace.js?1705570127"></script><script src="/javascripts/redmine_extensions/blocking_schedule.js?1705570127"></script><script src="/javascripts/redmine_extensions/blocking_polyfill.js?1705570127"></script><script src="/javascripts/redmine_extensions/blocking_render.js?1705570127"></script><script src="/javascripts/redmine_extensions/blocking_utils.js?1705570127"></script><script src="/javascripts/redmine_extensions/easy_togglers.js?1705570127"></script><script src="/javascripts/redmine_extensions/jquery.entityarray.js?1705570127"></script><script src="/javascripts/redmine_extensions/render_polyfill.js?1705570127"></script><script src="/javascripts/redmine_extensions/dynamic_loading.js?1705570127"></script><script src="/javascripts/redmine_extensions/redmine_extensions.js?1705570127"></script> <link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/hint.css?1585303489" />
+ <script src="/javascripts/redmine_extensions/blocking_namespace.js?1705551856"></script><script src="/javascripts/redmine_extensions/blocking_schedule.js?1705551856"></script><script src="/javascripts/redmine_extensions/blocking_polyfill.js?1705551856"></script><script src="/javascripts/redmine_extensions/blocking_render.js?1705551856"></script><script src="/javascripts/redmine_extensions/blocking_utils.js?1705551856"></script><script src="/javascripts/redmine_extensions/easy_togglers.js?1705551856"></script><script src="/javascripts/redmine_extensions/jquery.entityarray.js?1705551856"></script><script src="/javascripts/redmine_extensions/render_polyfill.js?1705551856"></script><script src="/javascripts/redmine_extensions/dynamic_loading.js?1705551856"></script><script src="/javascripts/redmine_extensions/redmine_extensions.js?1705551856"></script> <link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/hint.css?1585303489" />
 <link rel="stylesheet" media="all" href="/plugin_assets/a_common_libs/stylesheets/a_common_styles.css?1618483929" />
 <link rel="stylesheet" media="screen" href="/plugin_assets/a_common_libs/stylesheets/rmp_settings.css?1618483929" />
 <script src="/plugin_assets/a_common_libs/javascripts/a_common_libs.js?1618483929"></script>
@@ -561,7 +561,7 @@ $( document ).ready(function() {
           
 
 
-<form action="/login" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="BwtI28woZYFpR4kc3Ogb6wHb55WtsIEku6gqgMWHA3SPfshfRAeHLxTopBaJNzWBdUTDIJcE105BsIi8JKF91g==" />
+<form action="/login" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="HL/fQZ3pi1UcdzCFgUb2di+TWW+y1Sj6bNreOEPlzPElJ5aVJy8Z8NInWDKsNkGZ4/BemvLTr903uAS2oMw2oQ==" />
   <input type="hidden" name="back_url" value="https://wf.kvant-telecom.ru/attachments/download/45816/screenshot_1_1694593673.png" />
 
   <div class="us-style-body">

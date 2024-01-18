@@ -5,7 +5,7 @@
     <title>Redmine - Добро пожаловать в проект</title>
     <meta name="description" content=Redmine />
     <meta name="csrf-param" content="authenticity_token" />
-<meta name="csrf-token" content="oYJft/pppPIcBweqcaUX7IDiN1kjaN6e/3l8R567j/jsZXUXfed0vSM7DgfsPT8bE5zoH0lOG1wBYSwWuD2bSQ==" />
+<meta name="csrf-token" content="5OMzheSQrzIGFZs0lBUPr0Vk+oGvnFn6IYi32DEA32sWYDVr8iWNt3i+cjPeJyE2SLouQpagkIf3JWaTJgndNw==" />
     <link rel='shortcut icon' href='/favicon.ico?1585303490' />
     <link rel="stylesheet" media="all" href="/stylesheets/jquery/jquery-ui-1.11.0.css?1585303489" />
 <link rel="stylesheet" media="all" href="/themes/redmine_alex_skin/stylesheets/application.css?1646226737" />
@@ -561,7 +561,7 @@ $( document ).ready(function() {
           
 
 
-<form action="/login" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="v8E/vaR1OmUAbS3lVFZZgZHmqyiRs1vWwRQlA3GyGobyJhUdI/vqKj9RJEjJznF2Aph0bvuVnhQ/DHVSVzQONw==" />
+<form action="/login" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="authenticity_token" value="XtZA7EjkfdeIzXlW6UpnOSpCgE/u8AgJs7Tq4hb/htCsVUYCXlFfUvZmkFGjeEmgJ5xUjNfMwXRlGTupAfaEjA==" />
   <input type="hidden" name="back_url" value="https://wf.kvant-telecom.ru/attachments/download/45817/screenshot_1_1694593904.png" />
 
   <div class="us-style-body">
